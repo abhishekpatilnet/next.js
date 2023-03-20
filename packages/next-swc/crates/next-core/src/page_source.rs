@@ -124,7 +124,6 @@ pub async fn create_page_source(
         client_module_options_context,
         client_resolve_options_context,
         client_compile_time_info,
-        server_root,
         runtime_entries: client_runtime_entries,
     }
     .cell()

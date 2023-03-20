@@ -112,9 +112,7 @@ impl Transition for NextEdgeTransition {
 
         let asset = ChunkGroupFilesAsset {
             asset: new_asset.into(),
-            // This ensures that the chunk group files asset will strip out the _next prefix from
-            // all chunk paths, which is what the Next.js renderer code expects.
-            client_root: self.edge_chunking_context.output_root().join("_next"),
+            client_root: self.output_path,
             chunking_context: self.edge_chunking_context,
             runtime_entries: None,
         };

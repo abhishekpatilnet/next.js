@@ -23,6 +23,7 @@ use turbopack_core::{
     source_asset::SourceAssetVc,
     virtual_asset::VirtualAssetVc,
 };
+use turbopack_dev::DevChunkingContextVc;
 use turbopack_ecmascript::{
     EcmascriptInputTransform, EcmascriptInputTransformsVc, EcmascriptModuleAssetType,
     EcmascriptModuleAssetVc, InnerAssetsVc, OptionEcmascriptModuleAssetVc,
@@ -269,11 +270,20 @@ fn route_executor(context: AssetContextVc, configs: InnerAssetsVc) -> AssetVc {
 fn edge_transition_map(
     server_addr: ServerAddrVc,
     project_path: FileSystemPathVc,
-    edge_chunking_context: ChunkingContextVc,
+    output_path: FileSystemPathVc,
     next_config: NextConfigVc,
     execution_context: ExecutionContextVc,
 ) -> TransitionsByNameVc {
     let edge_compile_time_info = get_edge_compile_time_info(server_addr, Value::new(Middleware));
+
+    let edge_chunking_context = DevChunkingContextVc::builder(
+        project_path,
+        output_path.join("edge"),
+        output_path.join("edge/chunks"),
+        output_path.join("edge/assets"),
+        edge_compile_time_info.environment(),
+    )
+    .build();
 
     let edge_resolve_options_context = get_edge_resolve_options_context(
         project_path,
@@ -294,7 +304,7 @@ fn edge_transition_map(
         edge_chunking_context,
         edge_module_options_context: Some(server_module_options_context),
         edge_resolve_options_context,
-        output_path: edge_chunking_context.output_root(),
+        output_path: output_path.root(),
         base_path: project_path,
         bootstrap_file: next_js_file("entry/edge-bootstrap.ts"),
         entry_name: "middleware".to_string(),
@@ -355,7 +365,7 @@ async fn route_internal(
         Some(edge_transition_map(
             server_addr,
             project_path,
-            chunking_context.with_layer("edge"),
+            chunking_context.output_root(),
             next_config,
             execution_context,
         )),

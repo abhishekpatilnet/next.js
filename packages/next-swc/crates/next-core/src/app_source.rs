@@ -107,7 +107,6 @@ async fn next_client_transition(
 
     Ok(NextClientTransition {
         is_app: true,
-        server_root,
         client_chunking_context,
         client_module_options_context,
         client_resolve_options_context,
