@@ -17,7 +17,7 @@ use turbopack_core::{
     ident::AssetIdentVc,
     reference::AssetReferencesVc,
 };
-use turbopack_ecmascript::{chunk::EcmascriptChunkContextVc, utils::StringifyJs};
+use turbopack_ecmascript::{chunk::EcmascriptChunkingContextVc, utils::StringifyJs};
 
 #[turbo_tasks::function]
 fn modifier() -> StringVc {
@@ -76,7 +76,7 @@ impl EcmascriptChunkPlaceable for WithChunksAsset {
     #[turbo_tasks::function]
     async fn as_chunk_item(
         self_vc: WithChunksAssetVc,
-        context: EcmascriptChunkContextVc,
+        context: EcmascriptChunkingContextVc,
     ) -> Result<EcmascriptChunkItemVc> {
         Ok(WithChunksChunkItem {
             context,
@@ -110,22 +110,22 @@ impl WithChunksAssetVc {
 
 #[turbo_tasks::value]
 struct WithChunksChunkItem {
-    context: EcmascriptChunkContextVc,
+    context: EcmascriptChunkingContextVc,
     inner: WithChunksAssetVc,
 }
 
 #[turbo_tasks::value_impl]
 impl EcmascriptChunkItem for WithChunksChunkItem {
     #[turbo_tasks::function]
-    fn chunking_context(&self) -> EcmascriptChunkContextVc {
+    fn chunking_context(&self) -> EcmascriptChunkingContextVc {
         self.context
     }
 
     #[turbo_tasks::function]
     async fn content(&self) -> Result<EcmascriptChunkItemContentVc> {
         let inner = self.inner.await?;
-        let Some(inner_chunking_context) = EcmascriptChunkContextVc::resolve_from(inner.chunking_context).await? else {
-            bail!("the chunking context is not an EcmascriptChunkContextVc");
+        let Some(inner_chunking_context) = EcmascriptChunkingContextVc::resolve_from(inner.chunking_context).await? else {
+            bail!("the chunking context is not an EcmascriptChunkingContextVc");
         };
 
         let group = self.inner.chunk_group();

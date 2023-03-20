@@ -18,7 +18,7 @@ use turbopack_core::{
     reference::{AssetReference, AssetReferenceVc, AssetReferencesVc},
     resolve::{ResolveResult, ResolveResultVc},
 };
-use turbopack_ecmascript::{chunk::EcmascriptChunkContextVc, utils::StringifyJs};
+use turbopack_ecmascript::{chunk::EcmascriptChunkingContextVc, utils::StringifyJs};
 
 #[turbo_tasks::function]
 fn modifier() -> StringVc {
@@ -75,10 +75,10 @@ impl EcmascriptChunkPlaceable for WithClientChunksAsset {
     #[turbo_tasks::function]
     async fn as_chunk_item(
         self_vc: WithClientChunksAssetVc,
-        context: EcmascriptChunkContextVc,
+        context: EcmascriptChunkingContextVc,
     ) -> Result<EcmascriptChunkItemVc> {
         Ok(WithClientChunksChunkItem {
-            context: EcmascriptChunkContextVc::resolve_from(context.with_layer("rsc"))
+            context: EcmascriptChunkingContextVc::resolve_from(context.with_layer("rsc"))
                 .await?
                 .context(
                     "ChunkingContextVc::with_layer should not return a different kind of chunking \
@@ -99,14 +99,14 @@ impl EcmascriptChunkPlaceable for WithClientChunksAsset {
 
 #[turbo_tasks::value]
 struct WithClientChunksChunkItem {
-    context: EcmascriptChunkContextVc,
+    context: EcmascriptChunkingContextVc,
     inner: WithClientChunksAssetVc,
 }
 
 #[turbo_tasks::value_impl]
 impl EcmascriptChunkItem for WithClientChunksChunkItem {
     #[turbo_tasks::function]
-    fn chunking_context(&self) -> EcmascriptChunkContextVc {
+    fn chunking_context(&self) -> EcmascriptChunkingContextVc {
         self.context
     }
 

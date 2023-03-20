@@ -13,7 +13,7 @@ use turbopack_core::{
     ident::AssetIdentVc,
     reference::AssetReferencesVc,
 };
-use turbopack_ecmascript::chunk::EcmascriptChunkContextVc;
+use turbopack_ecmascript::chunk::EcmascriptChunkingContextVc;
 
 #[turbo_tasks::function]
 fn modifier() -> StringVc {
@@ -66,10 +66,10 @@ impl EcmascriptChunkPlaceable for WithChunkingContextScopeAsset {
     #[turbo_tasks::function]
     async fn as_chunk_item(
         &self,
-        context: EcmascriptChunkContextVc,
+        context: EcmascriptChunkingContextVc,
     ) -> Result<EcmascriptChunkItemVc> {
         Ok(self.asset.as_chunk_item(
-            EcmascriptChunkContextVc::resolve_from(context.with_layer(&self.layer))
+            EcmascriptChunkingContextVc::resolve_from(context.with_layer(&self.layer))
                 .await?
                 .context(
                     "ChunkingContextVc::with_layer should not return a different kind of chunking \

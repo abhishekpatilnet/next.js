@@ -13,7 +13,7 @@ use turbopack_core::{
     ident::AssetIdentVc,
     reference::AssetReferencesVc,
 };
-use turbopack_ecmascript::chunk::EcmascriptChunkContextVc;
+use turbopack_ecmascript::chunk::EcmascriptChunkingContextVc;
 
 #[turbo_tasks::function]
 fn modifier() -> StringVc {
@@ -61,10 +61,10 @@ impl EcmascriptChunkPlaceable for InChunkingContextAsset {
     #[turbo_tasks::function]
     async fn as_chunk_item(
         &self,
-        _context: EcmascriptChunkContextVc,
+        _context: EcmascriptChunkingContextVc,
     ) -> Result<EcmascriptChunkItemVc> {
-        let Some(chunking_context) = EcmascriptChunkContextVc::resolve_from(&self.chunking_context).await? else {
-            bail!("chunking context is not an EcmascriptChunkContext")
+        let Some(chunking_context) = EcmascriptChunkingContextVc::resolve_from(&self.chunking_context).await? else {
+            bail!("chunking context is not an EcmascriptChunkingContext")
         };
         Ok(self.asset.as_chunk_item(chunking_context))
     }
