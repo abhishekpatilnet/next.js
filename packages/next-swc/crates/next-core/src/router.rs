@@ -13,7 +13,7 @@ use turbopack::{evaluate_context::node_evaluate_asset_context, transition::Trans
 use turbopack_core::{
     asset::AssetVc,
     changed::any_content_changed,
-    chunk::{ChunkingContext, ChunkingContextVc},
+    chunk::ChunkingContext,
     context::{AssetContext, AssetContextVc},
     environment::{EnvironmentIntention::Middleware, ServerAddrVc},
     ident::AssetIdentVc,

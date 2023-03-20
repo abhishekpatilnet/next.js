@@ -1,7 +1,6 @@
 use anyhow::Result;
 use indexmap::indexmap;
 use turbo_tasks::Value;
-use turbo_tasks_fs::FileSystemPathVc;
 use turbopack::{
     ecmascript::chunk_group_files_asset::ChunkGroupFilesAsset,
     module_options::ModuleOptionsContextVc,

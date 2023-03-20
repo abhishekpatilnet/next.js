@@ -10,7 +10,7 @@ use turbopack::{
 };
 use turbopack_core::{
     asset::{Asset, AssetVc},
-    chunk::{ChunkingContext, ChunkingContextVc},
+    chunk::ChunkingContextVc,
     compile_time_info::CompileTimeInfoVc,
     context::AssetContext,
     virtual_asset::VirtualAssetVc,
